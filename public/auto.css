@@ -230,3 +230,53 @@ header{
         gap: 0;
     }
 }
+
+.automobile-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.automobile-item {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+.automobile-item img {
+    max-width: 100%;
+    height: auto;
+}
+
+.buy-now {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+.cart-container {
+    padding: 20px;
+}
+
+.cart-item {
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+}
+
+.go-to-cart {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    border-radius: 5px;
+}
+
+.go-to-cart:hover {
+    background-color: #45a049;
+}

@@ -1,0 +1,8 @@
+# Node.js dependencies
+# Run `npm install` to install these dependencies
+express
+body-parser
+
+# SQLite dependencies
+# Run `npm install sqlite3` to install SQLite for Node.js
+sqlite3
