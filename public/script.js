@@ -2,20 +2,19 @@ document.getElementById('registerForm').addEventListener('submit', async (e) => 
     e.preventDefault();
     const email = document.getElementById('registerEmail').value;
     const password = document.getElementById('registerPassword').value;
-    const role = document.getElementById('registerRole').value;
 
     const response = await fetch('/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ email, password, role })
+        body: JSON.stringify({ email, password })
     });
 
     const result = await response.text();
     if (response.ok) {
         alert('Registration successful!');
-        window.location.href = 'login.html'; // Redirect to login page or any other page
+        location.reload(); // Reload the page after successful registration
     } else {
         alert(result);
     }

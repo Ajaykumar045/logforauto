@@ -22,11 +22,11 @@ db.serialize(() => {
 
 app.post('/register', async (req, res) => {
   console.log('Register request received:', req.body);
-  const { email, password, role } = req.body;
+  const { email, password } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const query = 'INSERT INTO users (email, password, role) VALUES (?, ?, ?)';
-  db.run(query, [email, hashedPassword, role], function(err) {
+  const query = 'INSERT INTO users (email, password) VALUES (?, ?)';
+  db.run(query, [email, hashedPassword], function(err) {
     if (err) {
       console.error('Error registering user:', err);
       return res.status(500).send('Error registering user');
