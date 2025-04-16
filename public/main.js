@@ -46,3 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
     }
 });
+
+function logout() {
+    // Perform any necessary cleanup (e.g., clearing session storage or cookies)
+    alert('You have been logged out!');
+    window.location.href = 'index.html'; // Redirect to the index.html page
+}
