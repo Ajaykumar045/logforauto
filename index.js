@@ -3,6 +3,7 @@ const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcrypt');
 const path = require('path');
 const cors = require('cors'); // Enable cross-origin requests
+const stripe = require('stripe')('your-stripe-secret-key'); // Replace with your Stripe secret key
 const app = express();
 
 app.use(cors());
@@ -109,6 +110,53 @@ app.get('/api/cart/:userId', (req, res) => {
       return res.status(500).send('Error fetching cart items');
     }
     res.status(200).json(rows);
+  });
+});
+
+// Create a Stripe checkout session
+app.post('/api/create-checkout-session', async (req, res) => {
+  const { userId } = req.body;
+
+  // Fetch cart items for the user
+  const query = `
+    SELECT products.name, products.price, cart.quantity
+    FROM cart
+    JOIN products ON cart.product_id = products.id
+    WHERE cart.user_id = ?
+  `;
+  db.all(query, [userId], async (err, rows) => {
+    if (err) {
+      console.error('Error fetching cart items:', err);
+      return res.status(500).send('Error fetching cart items');
+    }
+
+    // Map cart items to Stripe line items
+    const lineItems = rows.map((item) => ({
+      price_data: {
+        currency: 'usd',
+        product_data: {
+          name: item.name,
+        },
+        unit_amount: Math.round(item.price * 100), // Convert to cents
+      },
+      quantity: item.quantity,
+    }));
+
+    try {
+      // Create a Stripe checkout session
+      const session = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: lineItems,
+        mode: 'payment',
+        success_url: 'http://localhost:3000/success.html', // Redirect after successful payment
+        cancel_url: 'http://localhost:3000/cancel.html',  // Redirect if payment is canceled
+      });
+
+      res.status(200).json({ url: session.url });
+    } catch (error) {
+      console.error('Error creating checkout session:', error);
+      res.status(500).send('Error creating checkout session');
+    }
   });
 });
 

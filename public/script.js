@@ -127,6 +127,38 @@ async function fetchCartItems() {
   });
 }
 
+// Handle "Buy Now" button click
+async function handleBuyNow() {
+  const userId = localStorage.getItem('userId');
+  if (!userId) {
+    alert('Please log in to proceed with the purchase.');
+    return;
+  }
+
+  try {
+    // Create a checkout session
+    const response = await fetch('/api/create-checkout-session', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId }),
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      // Redirect to Stripe checkout page
+      window.location.href = result.url;
+    } else {
+      alert('Failed to create checkout session.');
+    }
+  } catch (error) {
+    console.error('Error during checkout:', error);
+    alert('An error occurred. Please try again.');
+  }
+}
+
+// Attach event listener to the "Buy Now" button
+document.querySelector('.buy-now').addEventListener('click', handleBuyNow);
+
 function login() {
   document.getElementById('login').style.left = "4px";
   document.getElementById('register').style.right = "-520px";
